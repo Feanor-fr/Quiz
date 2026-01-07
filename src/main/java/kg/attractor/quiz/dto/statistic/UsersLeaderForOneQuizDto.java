@@ -1,0 +1,15 @@
+package kg.attractor.quiz.dto.statistic;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+public class UsersLeaderForOneQuizDto {
+    private String email;
+    private Integer score;
+}
