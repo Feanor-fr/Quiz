@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-options-table
+      author: Feanor
+      changes:
+        - createTable:
+            tableName: options
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar (100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_correct
+                  type: boolean
+                  constraints:
+                    nullable: false

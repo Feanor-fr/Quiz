@@ -5,14 +5,13 @@ server:
 
 spring:
   application:
-    name: Job Search
+    name: Quiz
 
 
   #DB config
   datasource:
-    url: jdbc:h2:./db/job;AUTO_SERVER=TRUE
-
-    username: feanor
+    url: jdbc:h2:./db/quiz;AUTO_SERVER=TRUE
+    username: gul
     password: 1228
     driver-class-name: org.h2.Driver
 

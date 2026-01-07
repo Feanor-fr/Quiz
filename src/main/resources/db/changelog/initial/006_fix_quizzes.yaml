@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-fix-quizzes
+      author: Feanor
+      changes:
+        - addPrimaryKey:
+            tableName: quizzes
+            columnNames: id
+            constraintName: pk_quizzes

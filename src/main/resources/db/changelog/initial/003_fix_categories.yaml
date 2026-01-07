@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-fix-categories
+      author: Feanor
+      changes:
+        - addPrimaryKey:
+            tableName: categories
+            columnNames: id
+            constraintName: pk_categories

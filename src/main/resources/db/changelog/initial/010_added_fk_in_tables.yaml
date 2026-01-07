@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-added-fk-in-tables
+      author: Feanor
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_users_roles
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: quizzes
+            baseColumnNames: creator
+            referencedTableName: users
+            referencedColumnNames: email
+            constraintName: fk_quizzes_users
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: quizzes
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            constraintName: fk_quizzes_categories
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: questions
+            baseColumnNames: quiz_id
+            referencedTableName: quizzes
+            referencedColumnNames: id
+            constraintName: fk_questions_quizzes
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: options
+            baseColumnNames: question_id
+            referencedTableName: questions
+            referencedColumnNames: id
+            constraintName: fk_options_questions
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: quiz_results
+            baseColumnNames: quiz_id
+            referencedTableName: quizzes
+            referencedColumnNames: id
+            constraintName: fk_quiz_results_quizzes
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: quiz_results
+            baseColumnNames: user
+            referencedTableName: users
+            referencedColumnNames: email
+            constraintName: fk_quiz_results_users
+            onDelete: CASCADE
+            onUpdate: CASCADE

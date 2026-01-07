@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-questions-table
+      author: Feanor
+      changes:
+        - createTable:
+            tableName: questions
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: quiz_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar (100)
+                  constraints:
+                    nullable: false
