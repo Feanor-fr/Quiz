@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-fix-user-results
+      author: Feanor
+      changes:
+        - renameColumn:
+            tableName: quiz_results
+            oldColumnName: user
+            newColumnName: user_email
+            columnDataType: varchar(100)
