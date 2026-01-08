@@ -3,6 +3,7 @@ package kg.attractor.quiz.service.impl;
 import kg.attractor.quiz.dao.UserDao;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.exception.UserAlreadyExistsException;
+import kg.attractor.quiz.exception.UserNotFoundException;
 import kg.attractor.quiz.model.User;
 import kg.attractor.quiz.service.UserService;
 import kg.attractor.quiz.util.ConvertHelper;
@@ -33,6 +34,14 @@ public class UserServiceImpl implements UserService {
         }
 
         userDao.save(user);
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = userDao.findUserByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        return ConvertHelper.convertToUserDto(user);
     }
 
 

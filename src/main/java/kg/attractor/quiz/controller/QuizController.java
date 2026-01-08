@@ -1,5 +1,6 @@
 package kg.attractor.quiz.controller;
 
+import jakarta.validation.Valid;
 import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
 import kg.attractor.quiz.dto.game.UserAnswerDto;
@@ -7,6 +8,8 @@ import kg.attractor.quiz.dto.statistic.RateDto;
 import kg.attractor.quiz.dto.statistic.ResultDto;
 import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
+import kg.attractor.quiz.service.QuizService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +18,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/quizzes")
+@RequiredArgsConstructor
 public class QuizController {
+    private final QuizService quizService;
 
     @PostMapping("/api/quizzes")
-    public ResponseEntity<Void> create(@RequestBody QuizForCreatedDto quizForCreatedDto){
+    public ResponseEntity<Void> create(@Valid @RequestBody QuizForCreatedDto quizForCreatedDto){
+        quizService.create(quizForCreatedDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
