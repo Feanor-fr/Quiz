@@ -51,10 +51,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
 
-                        .requestMatchers(HttpMethod.POST, "/users/api/register").permitAll()
-
                         .requestMatchers("/quizzes/**").hasAuthority("USER")
                         .requestMatchers("/users/api/users/*/statistics").hasAuthority("USER")
+
+                        .requestMatchers(HttpMethod.POST, "/users/api/register").permitAll()
 
                         .anyRequest().authenticated()
 
