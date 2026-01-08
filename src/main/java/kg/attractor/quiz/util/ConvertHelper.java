@@ -4,6 +4,9 @@ import kg.attractor.quiz.dto.create.OptionForCreatedDto;
 import kg.attractor.quiz.dto.create.QuestionForCreatedDto;
 import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.create.UserDto;
+import kg.attractor.quiz.dto.game.OptionForGameDto;
+import kg.attractor.quiz.dto.game.QuestionForGameDto;
+import kg.attractor.quiz.dto.game.QuizForGameDto;
 import kg.attractor.quiz.model.Option;
 import kg.attractor.quiz.model.Question;
 import kg.attractor.quiz.model.Quiz;
@@ -38,8 +41,22 @@ public class ConvertHelper {
                 .build();
     }
 
+    public static OptionForGameDto convertToOptionForGameDto(Option option){
+        return OptionForGameDto.builder()
+                .id(option.getId())
+                .text(option.getText())
+                .build();
+    }
+
     public static Question convertToQuestion(QuestionForCreatedDto question){
         return Question.builder()
+                .text(question.getText())
+                .build();
+    }
+
+    public static QuestionForGameDto convertToQuestionForGameDto(Question question){
+        return QuestionForGameDto.builder()
+                .id(question.getId())
                 .text(question.getText())
                 .build();
     }
@@ -50,6 +67,13 @@ public class ConvertHelper {
                 .title(quiz.getTitle())
                 .description(quiz.getDescription())
                 .categoryId(quiz.getCategoryId())
+                .build();
+    }
+
+    public static QuizForGameDto convertToQuizForGameDto(Quiz quiz){
+        return QuizForGameDto.builder()
+                .id(quiz.getId())
+                .title(quiz.getTitle())
                 .build();
     }
 }

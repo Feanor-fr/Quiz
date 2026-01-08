@@ -2,12 +2,14 @@ package kg.attractor.quiz.dao;
 
 import kg.attractor.quiz.model.Question;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +33,13 @@ public class QuestionDao {
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    public List<Question> findAllByQuizId(Integer quizId){
+        String sql = "SELECT * FROM QUESTIONS " +
+                "where QUIZ_ID = ?";
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Question.class), quizId);
     }
 
 }

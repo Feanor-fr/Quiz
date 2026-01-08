@@ -3,6 +3,7 @@ package kg.attractor.quiz.service.impl;
 import kg.attractor.quiz.dao.QuestionDao;
 import kg.attractor.quiz.dto.create.OptionForCreatedDto;
 import kg.attractor.quiz.dto.create.QuestionForCreatedDto;
+import kg.attractor.quiz.dto.game.QuestionForGameDto;
 import kg.attractor.quiz.exception.IncorrectInformationException;
 import kg.attractor.quiz.model.Question;
 import kg.attractor.quiz.service.OptionService;
@@ -47,5 +48,19 @@ public class QuestionServiceImpl implements QuestionService {
             optionService.create(o, questionId);
         }
 
+    }
+
+    @Override
+    public List<QuestionForGameDto> showQuizQuestionForGame(Integer quizId){
+        List<QuestionForGameDto> findQuestions = questionDao.findAllByQuizId(quizId)
+                .stream()
+                .map(ConvertHelper ::convertToQuestionForGameDto)
+                .toList();
+
+        for(QuestionForGameDto q : findQuestions){
+            q.setOptionForGameDtos(optionService.showAllQuestionOptionsForGame(q.getId()));
+        }
+
+        return findQuestions;
     }
 }

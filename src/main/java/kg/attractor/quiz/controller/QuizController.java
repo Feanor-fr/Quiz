@@ -30,12 +30,12 @@ public class QuizController {
 
     @GetMapping("/api/quizzes")
     public ResponseEntity<List<QuizForViewDto>> allQuizzesToView(){
-        return ResponseEntity.ok(List.of());
+        return ResponseEntity.ok(quizService.findAllQuizzesWithQuestionCount());
     }
 
     @GetMapping("/api/quizzes/{quizId}")
     public ResponseEntity<QuizForGameDto> showQuizForGame(@PathVariable Integer quizId){
-        return ResponseEntity.ok(new QuizForGameDto());
+        return ResponseEntity.ok(quizService.showOneQuizForGame(quizId));
     }
 
     @PostMapping("/api/quizzes/{quizId}/slove")

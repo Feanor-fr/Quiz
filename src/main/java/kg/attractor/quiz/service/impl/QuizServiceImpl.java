@@ -4,7 +4,10 @@ import kg.attractor.quiz.dao.QuizDao;
 import kg.attractor.quiz.dto.create.QuestionForCreatedDto;
 import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.create.UserDto;
+import kg.attractor.quiz.dto.game.QuizForGameDto;
+import kg.attractor.quiz.dto.view.QuizForViewDto;
 import kg.attractor.quiz.exception.IncorrectInformationException;
+import kg.attractor.quiz.exception.QuizNotFoundException;
 import kg.attractor.quiz.model.Quiz;
 import kg.attractor.quiz.service.CategoryService;
 import kg.attractor.quiz.service.QuestionService;
@@ -44,5 +47,21 @@ public class QuizServiceImpl implements QuizService {
             questionService.create(q, quizId);
         }
 
+    }
+
+    @Override
+    public List<QuizForViewDto> findAllQuizzesWithQuestionCount(){
+        return quizDao.findAllQuizzesWithQuestionCount();
+    }
+
+    @Override
+    public QuizForGameDto showOneQuizForGame(Integer quizId){
+        Quiz findQuiz = quizDao.getQuizById(quizId).orElseThrow(QuizNotFoundException::new);
+
+        QuizForGameDto quizGame = ConvertHelper.convertToQuizForGameDto(findQuiz);
+
+        quizGame.setQuestionForGameDtos(questionService.showQuizQuestionForGame(quizGame.getId()));
+
+        return quizGame;
     }
 }
