@@ -2,7 +2,9 @@ package kg.attractor.quiz.service;
 
 import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
+import kg.attractor.quiz.dto.game.UserAnswerDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,4 +14,7 @@ public interface QuizService {
     List<QuizForViewDto> findAllQuizzesWithQuestionCount();
 
     QuizForGameDto showOneQuizForGame(Integer quizId);
+
+    @Transactional
+    void userAnswers(UserAnswerDto userAnswerDto, Integer quizId);
 }

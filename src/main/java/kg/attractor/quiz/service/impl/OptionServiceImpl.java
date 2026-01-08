@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class OptionServiceImpl implements OptionService{
     public void create(OptionForCreatedDto optionDto, Integer questionId){
         Option option = ConvertHelper.convertToOption(optionDto);
         optionDao.save(option, questionId);
+    }
+
+    @Override
+    public Optional<Option> getOptionById(Integer id){
+        return optionDao.getOptionById(id);
     }
 
     @Override

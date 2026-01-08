@@ -51,6 +51,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> showAllByQuizId(Integer quizId){
+        return questionDao.findAllByQuizId(quizId);
+    }
+
+    @Override
     public List<QuestionForGameDto> showQuizQuestionForGame(Integer quizId){
         List<QuestionForGameDto> findQuestions = questionDao.findAllByQuizId(quizId)
                 .stream()

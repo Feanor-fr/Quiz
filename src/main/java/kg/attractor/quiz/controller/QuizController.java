@@ -39,7 +39,8 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes/{quizId}/slove")
-    public ResponseEntity<Void> answerQuizQuestions(@PathVariable Integer quizId, @RequestBody UserAnswerDto userAnswerDto){
+    public ResponseEntity<Void> answerQuizQuestions(@PathVariable Integer quizId, @Valid @RequestBody UserAnswerDto userAnswerDto){
+        quizService.userAnswers(userAnswerDto, quizId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
