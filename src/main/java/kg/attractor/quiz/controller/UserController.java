@@ -1,5 +1,6 @@
 package kg.attractor.quiz.controller;
 
+import jakarta.validation.Valid;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.statistic.UserStatisticDto;
 import kg.attractor.quiz.service.UserService;
@@ -15,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
       @PostMapping("/api/register")
-    public ResponseEntity<Void> register(@RequestBody UserDto userDto){
+    public ResponseEntity<Void> register(@Valid @RequestBody UserDto userDto){
           userService.create(userDto);
           return ResponseEntity.status(HttpStatus.CREATED).build();
       }
