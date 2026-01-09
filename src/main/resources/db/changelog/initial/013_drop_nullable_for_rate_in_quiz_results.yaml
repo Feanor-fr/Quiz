@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-drop-nullable-for-rate-in-quiz-results
+      author: Feanor
+      changes:
+        - dropNotNullConstraint:
+            tableName: quiz_results
+            columnName: rate

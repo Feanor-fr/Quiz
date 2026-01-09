@@ -1,7 +1,5 @@
 package kg.attractor.quiz.dao;
 
-import kg.attractor.quiz.dto.statistic.UserStatisticDto;
-import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.model.QuizResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
@@ -9,8 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -20,16 +17,26 @@ public class QuizResultDao {
     public void save(QuizResult quizResult){
         String sql = """ 
                 INSERT INTO QUIZ_RESULTS
-                (USER_EMAIL, QUIZ_ID, SCORE, RATE)
+                (USER_EMAIL, QUIZ_ID, SCORE)
                 VALUES(?,?,?,?)
                 """;
 
         jdbcTemplate.update(sql,
                 quizResult.getUser(),
                 quizResult.getQuizId(),
-                quizResult.getScore(),
-                quizResult.getRate()
+                quizResult.getScore()
         );
+    }
+
+    public void rate(String userEmail, Integer quizId, Integer rate) {
+        String sql = """
+            UPDATE quiz_results
+               SET rate = ?
+             WHERE user_email = ?
+               AND quiz_id = ?
+            """;
+
+         jdbcTemplate.update(sql, rate, userEmail, quizId);
     }
 
     public Optional<QuizResult> findByQuizIdAndUserEmail(String userEmail, Integer quizId) {
@@ -44,20 +51,23 @@ public class QuizResultDao {
         return Optional.ofNullable(quizResult);
     }
 
-    public List<UsersLeaderForOneQuizDto> getLeaderboardByQuizId(Integer quizId) {
+    public Map<String, Integer> getLeaderboardByQuizId(Integer quizId) {
         String sql = """
-        SELECT USER_EMAIL AS email, SCORE
+        SELECT USER_EMAIL , SCORE
         FROM QUIZ_RESULTS
         WHERE QUIZ_ID = ?
         ORDER BY SCORE DESC, USER_EMAIL ASC  
         """;
-
-        return jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper<>(UsersLeaderForOneQuizDto.class),
-                quizId);
+        return jdbcTemplate.query(sql, new Object[]{quizId}, rs -> {
+            Map<String, Integer> map = new LinkedHashMap<>();
+            while (rs.next()) {
+                map.put(rs.getString("USER_EMAIL"), rs.getInt("SCORE"));
+            }
+            return map;
+        });
     }
 
-    public Optional<UserStatisticDto> getUserStatistics(String userEmail) {
+    public  Map<String, Integer> getUserStatistics(String userEmail) {
         String sql = """
         SELECT 
             COUNT(*) AS numberQuizzesCompleted,
@@ -66,10 +76,13 @@ public class QuizResultDao {
         WHERE USER_EMAIL = ?
         """;
 
-        UserStatisticDto userStatistic = DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserStatisticDto.class), userEmail)
-        );
-
-        return Optional.ofNullable(userStatistic);
+        return jdbcTemplate.query(sql, new Object[]{userEmail}, rs -> {
+            Map<String, Integer> map = new HashMap<>();
+            if (rs.next()) {
+                map.put("numberQuizzesCompleted", rs.getInt("numberQuizzesCompleted"));
+                map.put("averageScore", rs.getInt("averageScore"));
+            }
+            return map;
+        });
     }
 }

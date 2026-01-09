@@ -50,7 +50,8 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes/{quizId}/rate")
-    public ResponseEntity<Void> rateQuiz(@PathVariable Integer quizId, @RequestBody RateDto rateDto){
+    public ResponseEntity<Void> rateQuiz(@PathVariable Integer quizId, @Valid @RequestBody RateDto rateDto){
+       quizService.rateQuiz(quizId, rateDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -1,6 +1,5 @@
 package kg.attractor.quiz.dao;
 
-import kg.attractor.quiz.dto.view.QuizForViewDto;
 import kg.attractor.quiz.model.Quiz;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
@@ -11,8 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class QuizDao {
         return keyHolder.getKey().intValue();
     }
 
-    public List<QuizForViewDto> findAllQuizzesWithQuestionCount(){
+    public List<Map<String, Object>> findAllQuizzesWithQuestionCount(){
         String sql = """
                 SELECT 
                 q.TITLE,
@@ -51,7 +49,16 @@ public class QuizDao {
                 ORDER BY q.ID DESC
                 """;
 
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(QuizForViewDto.class));
+        return jdbcTemplate.query(sql, rs -> {
+            List<Map<String, Object>> list = new ArrayList<>();
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("title", rs.getString("TITLE"));
+                map.put("questionCount", rs.getInt("questionCount"));
+                list.add(map);
+            }
+            return list;
+        });
     }
 
     public Optional<Quiz> getQuizById(Integer id) {

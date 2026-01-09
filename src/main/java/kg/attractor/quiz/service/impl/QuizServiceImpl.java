@@ -6,6 +6,7 @@ import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
 import kg.attractor.quiz.dto.game.UserAnswerDto;
+import kg.attractor.quiz.dto.statistic.RateDto;
 import kg.attractor.quiz.dto.statistic.ResultDto;
 import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
@@ -60,7 +61,14 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizForViewDto> findAllQuizzesWithQuestionCount(){
-        return quizDao.findAllQuizzesWithQuestionCount();
+        List<Map<String, Object>> infos = quizDao.findAllQuizzesWithQuestionCount();
+
+        return infos.stream()
+                .map(info -> QuizForViewDto.builder()
+                        .title((String) info.get("title"))
+                        .questionCount((Integer) info.get("questionCount"))
+                        .build())
+                .toList();
     }
 
     @Override
@@ -135,7 +143,6 @@ public class QuizServiceImpl implements QuizService {
                 .user(autUser.getEmail())
                 .quizId(findQuiz.getId())
                 .score(score)
-                .rate(userAnswerDto.getRate())
                 .build();
 
         quizResultService.create(quizResult);
@@ -179,5 +186,24 @@ public class QuizServiceImpl implements QuizService {
                 .orElseThrow(QuizNotFoundException::new);
 
         return quizResultService.getLeaderboard(quizId);
+    }
+
+    @Override
+    public void rateQuiz(Integer quizId, RateDto rateDto){
+        Quiz findQuiz = quizDao.getQuizById(quizId)
+                .orElseThrow(QuizNotFoundException::new);
+
+        String userEmail = userHelper.getAuthUser().getEmail();
+
+        QuizResult userResult = quizResultService.findByQuizIdAndUserEmail(userEmail, findQuiz.getId())
+                .orElseThrow(() -> new IncorrectInformationException(
+                        "Вы ещё не проходили эту викторину!"));
+
+        if(userResult.getRate() != null){
+            throw new  IncorrectInformationException(
+                    "Оценить викторину можно только один раз!");
+        }
+
+        quizResultService.rate(userEmail, quizId, rateDto.getRate());
     }
 }

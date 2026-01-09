@@ -8,8 +8,7 @@ import kg.attractor.quiz.service.QuizResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,24 +27,34 @@ public class QuizResultServiceImpl implements QuizResultService {
 
     @Override
     public List<UsersLeaderForOneQuizDto> getLeaderboard(Integer quizId) {
-        return quizResultDao.getLeaderboardByQuizId(quizId);
+        Map<String, Integer> scoresMap = quizResultDao.getLeaderboardByQuizId(quizId);
+
+        return scoresMap.entrySet().stream()
+                .map(entry -> UsersLeaderForOneQuizDto.builder()
+                        .email( entry.getKey())
+                        .score( entry.getValue())
+                        .build())
+                .toList();
     }
 
 
     @Override
     public UserStatisticDto getUserStatistics(String userEmail) {
-        return quizResultDao.getUserStatistics(userEmail)
-                .map(stat -> {
-                    int completed = stat.getNumberQuizzesCompleted();
-                    int sum = stat.getAverageScore();
-                    int average = completed == 0 ? 0 : sum / completed;
-                    stat.setAverageScore(average);
-                    return stat;
-                })
-                .orElse(UserStatisticDto.builder()
-                        .numberQuizzesCompleted(0)
-                        .averageScore(0)
-                        .build());
+        Map<String, Integer> statMap = quizResultDao.getUserStatistics(userEmail);
+
+        int completed = statMap.getOrDefault("numberQuizzesCompleted", 0);
+        int sum = statMap.getOrDefault("averageScore", 0);
+        int average = completed == 0 ? 0 : sum / completed;
+
+        return UserStatisticDto.builder()
+                .numberQuizzesCompleted(completed)
+                .averageScore(average)
+                .build();
+    }
+
+    @Override
+    public void rate(String userEmail, Integer quizId, Integer rate) {
+        quizResultDao.rate(userEmail, quizId, rate);
     }
 
 

@@ -15,4 +15,6 @@ public interface QuizResultService {
     List<UsersLeaderForOneQuizDto> getLeaderboard(Integer quizId);
 
     UserStatisticDto getUserStatistics(String userEmail);
+
+    void rate(String userEmail, Integer quizId, Integer rate);
 }
