@@ -3,12 +3,15 @@ package kg.attractor.quiz.controller;
 import jakarta.validation.Valid;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.statistic.UserStatisticDto;
+import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.service.QuizResultService;
 import kg.attractor.quiz.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -28,4 +31,10 @@ public class UserController {
           userService.getUserByEmail(email);
           return ResponseEntity.ok(quizResultService.getUserStatistics(email));
       }
+
+    @GetMapping("/api/leaderboard")
+    public ResponseEntity<List<UsersLeaderForOneQuizDto>> globalLeaders() {
+        return ResponseEntity.ok(quizResultService.getLeaderboardForAllQuizzes());
+    }
+
 }

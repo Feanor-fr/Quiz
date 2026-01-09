@@ -10,10 +10,11 @@ import kg.attractor.quiz.service.OptionService;
 import kg.attractor.quiz.service.QuestionService;
 import kg.attractor.quiz.util.ConvertHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
@@ -26,16 +27,19 @@ public class QuestionServiceImpl implements QuestionService {
         List<OptionForCreatedDto> optionDtos = questionDto.getOptionDtos();
 
         if (optionDtos == null || optionDtos.isEmpty()) {
+            log.info("optionDtos is null");
             throw new IncorrectInformationException("Отсутствуют ответы на вопросы!");
         }
 
         if (optionDtos.size() != 4) {
+            log.info("На каждый вопрос должно быть ровно 4 варианта ответа!");
             throw new IncorrectInformationException("На каждый вопрос должно быть ровно 4 варианта ответа!");
         }
 
         Integer correctCount = Math.toIntExact(optionDtos.stream()
                 .filter(OptionForCreatedDto::getIsCorrect)
                 .count());
+        log.info("count of correct answers {}", correctCount);
 
         if (correctCount != 1) {
             throw new IncorrectInformationException("Должен быть только один правильный ответ!");

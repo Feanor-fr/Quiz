@@ -68,4 +68,17 @@ public class QuizDao {
         );
         return Optional.ofNullable(resume);
     }
+
+    public List<Quiz> findByCategoryId(Integer categoryId) {
+        String sql = """
+            SELECT id, creator, title, description, category_id
+            FROM quizzes
+            WHERE category_id = ?
+            ORDER BY title
+            """;
+
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(Quiz.class),
+                categoryId);
+    }
 }

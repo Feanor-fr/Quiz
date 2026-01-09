@@ -18,11 +18,11 @@ public class QuizResultDao {
         String sql = """ 
                 INSERT INTO QUIZ_RESULTS
                 (USER_EMAIL, QUIZ_ID, SCORE)
-                VALUES(?,?,?,?)
+                VALUES(?,?,?)
                 """;
 
         jdbcTemplate.update(sql,
-                quizResult.getUser(),
+                quizResult.getUserEmail(),
                 quizResult.getQuizId(),
                 quizResult.getScore()
         );
@@ -84,5 +84,13 @@ public class QuizResultDao {
             }
             return map;
         });
+    }
+
+    public List<QuizResult> getAllResults(){
+        String sql = """
+                SELECT * FROM QUIZ_RESULTS
+                """;
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(QuizResult.class));
     }
 }

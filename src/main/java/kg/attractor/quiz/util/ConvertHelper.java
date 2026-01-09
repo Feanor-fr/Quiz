@@ -7,6 +7,7 @@ import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.game.OptionForGameDto;
 import kg.attractor.quiz.dto.game.QuestionForGameDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
+import kg.attractor.quiz.dto.view.QuizDto;
 import kg.attractor.quiz.model.Option;
 import kg.attractor.quiz.model.Question;
 import kg.attractor.quiz.model.Quiz;
@@ -74,6 +75,16 @@ public class ConvertHelper {
         return QuizForGameDto.builder()
                 .id(quiz.getId())
                 .title(quiz.getTitle())
+                .build();
+    }
+
+    public static QuizDto convertToQuizDto(Quiz quiz) {
+        return QuizDto.builder()
+                .id(quiz.getId())
+                .creator(quiz.getCreator())
+                .title(quiz.getTitle())
+                .description(quiz.getDescription())
+                .categoryId(quiz.getCategoryId())
                 .build();
     }
 }

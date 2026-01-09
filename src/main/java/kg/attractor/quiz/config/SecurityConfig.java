@@ -53,6 +53,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/quizzes/**").hasAuthority("USER")
                         .requestMatchers("/users/api/users/*/statistics").hasAuthority("USER")
+                        .requestMatchers("/users/api/leaderboard").hasAuthority("USER")
 
                         .requestMatchers(HttpMethod.POST, "/users/api/register").permitAll()
 

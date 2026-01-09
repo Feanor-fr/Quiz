@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class QuizResult {
     private Integer id;
-    private String user;
+    private String userEmail;
     private Integer quizId;
     private Integer score;
     private Integer rate;

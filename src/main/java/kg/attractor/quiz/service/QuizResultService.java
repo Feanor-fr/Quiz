@@ -17,4 +17,6 @@ public interface QuizResultService {
     UserStatisticDto getUserStatistics(String userEmail);
 
     void rate(String userEmail, Integer quizId, Integer rate);
+
+    List<UsersLeaderForOneQuizDto> getLeaderboardForAllQuizzes();
 }

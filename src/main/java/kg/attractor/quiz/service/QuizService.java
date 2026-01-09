@@ -6,6 +6,7 @@ import kg.attractor.quiz.dto.game.UserAnswerDto;
 import kg.attractor.quiz.dto.statistic.RateDto;
 import kg.attractor.quiz.dto.statistic.ResultDto;
 import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
+import kg.attractor.quiz.dto.view.QuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,4 +27,6 @@ public interface QuizService {
     List<UsersLeaderForOneQuizDto> getLeaderboard(Integer quizId);
 
     void rateQuiz(Integer quizId, RateDto rateDto);
+
+    List<QuizDto> getQuizzesByCategory(Integer categoryId);
 }

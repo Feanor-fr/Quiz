@@ -9,6 +9,7 @@ import kg.attractor.quiz.dto.game.UserAnswerDto;
 import kg.attractor.quiz.dto.statistic.RateDto;
 import kg.attractor.quiz.dto.statistic.ResultDto;
 import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
+import kg.attractor.quiz.dto.view.QuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
 import kg.attractor.quiz.exception.IncorrectInformationException;
 import kg.attractor.quiz.exception.OptionNotFoundException;
@@ -21,12 +22,14 @@ import kg.attractor.quiz.service.*;
 import kg.attractor.quiz.util.ConvertHelper;
 import kg.attractor.quiz.util.UserHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
@@ -47,6 +50,7 @@ public class QuizServiceImpl implements QuizService {
         List<QuestionForCreatedDto> questionDtos = quizDto.getQuestionDtos();
 
         if (questionDtos == null || questionDtos.isEmpty()) {
+            log.info("questionDtos is null");
             throw new IncorrectInformationException("Вопросы отсутствуют!");
         }
 
@@ -62,6 +66,7 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public List<QuizForViewDto> findAllQuizzesWithQuestionCount(){
         List<Map<String, Object>> infos = quizDao.findAllQuizzesWithQuestionCount();
+        log.info("infos {}", infos);
 
         return infos.stream()
                 .map(info -> QuizForViewDto.builder()
@@ -140,7 +145,7 @@ public class QuizServiceImpl implements QuizService {
         }
 
         QuizResult quizResult = QuizResult.builder()
-                .user(autUser.getEmail())
+                .userEmail(autUser.getEmail())
                 .quizId(findQuiz.getId())
                 .score(score)
                 .build();
@@ -205,5 +210,16 @@ public class QuizServiceImpl implements QuizService {
         }
 
         quizResultService.rate(userEmail, quizId, rateDto.getRate());
+    }
+
+    @Override
+    public List<QuizDto> getQuizzesByCategory(Integer categoryId) {
+        categoryService.findCategoryIdById(categoryId);
+
+        List<Quiz> quizzes = quizDao.findByCategoryId(categoryId);
+
+        return quizzes.stream()
+                .map(ConvertHelper::convertToQuizDto)
+                .toList();
     }
 }

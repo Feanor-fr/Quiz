@@ -7,6 +7,7 @@ import kg.attractor.quiz.dto.game.UserAnswerDto;
 import kg.attractor.quiz.dto.statistic.RateDto;
 import kg.attractor.quiz.dto.statistic.ResultDto;
 import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
+import kg.attractor.quiz.dto.view.QuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
 import kg.attractor.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,12 @@ public class QuizController {
     @GetMapping("/api/quizzes/{quizId}/leaderboard")
     public ResponseEntity<List<UsersLeaderForOneQuizDto>> leadersForOneQuiz(@PathVariable Integer quizId) {
         return ResponseEntity.ok(quizService.getLeaderboard(quizId));
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<QuizDto>> getQuizzesByCategory(@PathVariable Integer categoryId) {
+        List<QuizDto> quizzes = quizService.getQuizzesByCategory(categoryId);
+        return ResponseEntity.ok(quizzes);
     }
 
 }
