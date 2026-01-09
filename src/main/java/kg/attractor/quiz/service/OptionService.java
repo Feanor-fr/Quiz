@@ -10,5 +10,8 @@ import java.util.Optional;
 public interface OptionService {
     void create(OptionForCreatedDto optionDto, Integer questionId);
     Optional<Option> getOptionById(Integer id);
+
+    List<Option> showAllByQuestionId(Integer quizId);
+
     List<OptionForGameDto> showAllQuestionOptionsForGame(Integer questionId);
 }

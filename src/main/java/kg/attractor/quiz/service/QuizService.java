@@ -3,6 +3,8 @@ package kg.attractor.quiz.service;
 import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
 import kg.attractor.quiz.dto.game.UserAnswerDto;
+import kg.attractor.quiz.dto.statistic.ResultDto;
+import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,4 +19,8 @@ public interface QuizService {
 
     @Transactional
     void userAnswers(UserAnswerDto userAnswerDto, Integer quizId);
+
+    ResultDto getUserResult(Integer quizId);
+
+    List<UsersLeaderForOneQuizDto> getLeaderboard(Integer quizId);
 }

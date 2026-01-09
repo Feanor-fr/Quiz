@@ -6,6 +6,8 @@ import kg.attractor.quiz.dto.create.QuizForCreatedDto;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.game.QuizForGameDto;
 import kg.attractor.quiz.dto.game.UserAnswerDto;
+import kg.attractor.quiz.dto.statistic.ResultDto;
+import kg.attractor.quiz.dto.statistic.UsersLeaderForOneQuizDto;
 import kg.attractor.quiz.dto.view.QuizForViewDto;
 import kg.attractor.quiz.exception.IncorrectInformationException;
 import kg.attractor.quiz.exception.OptionNotFoundException;
@@ -21,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,6 +81,12 @@ public class QuizServiceImpl implements QuizService {
 
         UserDto autUser = userHelper.getAuthUser();
 
+        Optional<QuizResult> existingResult = quizResultService.findByQuizIdAndUserEmail(autUser.getEmail(), findQuiz.getId());
+
+        if (existingResult.isPresent()) {
+            throw new IncorrectInformationException("Вы уже проходили эту викторину!");
+        }
+
         Map<Integer, Integer> answers = userAnswerDto.getAnswers();
 
         for (Map.Entry<Integer, Integer> entry : answers.entrySet()) {
@@ -133,5 +139,45 @@ public class QuizServiceImpl implements QuizService {
                 .build();
 
         quizResultService.create(quizResult);
+    }
+
+    @Override
+    public ResultDto getUserResult(Integer quizId) {
+
+        Quiz findQuiz = quizDao.getQuizById(quizId)
+                .orElseThrow(QuizNotFoundException::new);
+
+        String userEmail = userHelper.getAuthUser().getEmail();
+
+        QuizResult userResult = quizResultService.findByQuizIdAndUserEmail(userEmail, findQuiz.getId())
+                .orElseThrow(() -> new IncorrectInformationException(
+                        "Вы ещё не проходили эту викторину!"));
+
+        List<Question> questions = questionService.showAllByQuizId(quizId);
+
+        List<String> correctAnswersTexts = new ArrayList<>();
+
+        for (Question question : questions) {
+
+            Option correctOption = optionService.showAllByQuestionId(question.getId()).stream()
+                    .filter(o -> Boolean.TRUE.equals(o.getIsCorrect()))
+                    .findFirst()
+                    .orElseThrow(OptionNotFoundException::new);
+
+            correctAnswersTexts.add(correctOption.getText());
+        }
+
+        return ResultDto.builder()
+                .score(userResult.getScore())
+                .optionsText(correctAnswersTexts)
+                .build();
+    }
+
+    @Override
+    public List<UsersLeaderForOneQuizDto> getLeaderboard(Integer quizId) {
+        Quiz findQuiz = quizDao.getQuizById(quizId)
+                .orElseThrow(QuizNotFoundException::new);
+
+        return quizResultService.getLeaderboard(quizId);
     }
 }

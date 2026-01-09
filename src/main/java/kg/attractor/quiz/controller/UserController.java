@@ -3,6 +3,7 @@ package kg.attractor.quiz.controller;
 import jakarta.validation.Valid;
 import kg.attractor.quiz.dto.create.UserDto;
 import kg.attractor.quiz.dto.statistic.UserStatisticDto;
+import kg.attractor.quiz.service.QuizResultService;
 import kg.attractor.quiz.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final QuizResultService quizResultService;
 
       @PostMapping("/api/register")
     public ResponseEntity<Void> register(@Valid @RequestBody UserDto userDto){
@@ -23,6 +25,7 @@ public class UserController {
 
       @GetMapping("/api/users/{email}/statistics")
     public ResponseEntity<UserStatisticDto> showUserStatistic(@PathVariable String email){
-          return ResponseEntity.ok(new UserStatisticDto());
+          userService.getUserByEmail(email);
+          return ResponseEntity.ok(quizResultService.getUserStatistics(email));
       }
 }

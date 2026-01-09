@@ -29,6 +29,11 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
+    public List<Option> showAllByQuestionId(Integer questionId){
+        return optionDao.findAllByQuestionId(questionId);
+    }
+
+    @Override
     public List<OptionForGameDto> showAllQuestionOptionsForGame(Integer questionId){
         return optionDao.findAllByQuestionId(questionId)
                 .stream()

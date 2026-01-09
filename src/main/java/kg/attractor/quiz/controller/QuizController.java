@@ -46,7 +46,7 @@ public class QuizController {
 
     @GetMapping("/api/quizzes/{quizId}/results")
     public ResponseEntity<ResultDto> showUserResultForOneQuiz(@PathVariable Integer quizId){
-        return ResponseEntity.ok(new ResultDto());
+        return ResponseEntity.ok(quizService.getUserResult(quizId));
     }
 
     @PostMapping("/api/quizzes/{quizId}/rate")
@@ -56,7 +56,7 @@ public class QuizController {
 
     @GetMapping("/api/quizzes/{quizId}/leaderboard")
     public ResponseEntity<List<UsersLeaderForOneQuizDto>> leadersForOneQuiz(@PathVariable Integer quizId) {
-        return ResponseEntity.ok(List.of());
+        return ResponseEntity.ok(quizService.getLeaderboard(quizId));
     }
 
 }
